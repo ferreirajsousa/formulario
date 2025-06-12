@@ -95,7 +95,7 @@ table{
     border: 1px solid #ccc;
      padding: 5px; }
 .botoes-tabela{
-    border: 20px;
+    border: 20px solid black;
     padding: 20px;
     padding-left: 10px;
     background: #f9f9f9;
