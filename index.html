@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="main.css">
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+  <title>Formulário</title>
+
+</head>
+<body>
+
+<!-- FORMULÁRIO PRINCIPAL -->
+<center>
+<div class="caixa" id="form">
+    <form id="meuFormulario" class="form-horizontal" >
+    <legend>Informação Pessoal</legend>
+    <div style="margin: 15px;" class="form-group">
+    <label for="p_nome"> Nome: </label>
+    <input type="text" name="nome" id="nome" placeholder="Nome" required>
+    </div>
+    <div style="margin: 15px;" class="form-group">
+      <label for="cliente_email"> Email: </label>
+      <input type="email" id="email"  placeholder="freitas.9@gmail.com" required> 
+    </div>
+      <div style="margin: 15px;"  class="form-group">
+      <label for="palavra_passe"> Palavra-Passe: </label>
+      <input type="password"  id="senha"   required> 
+    </div>
+  <div style="margin: 15px;" class="form-group">
+      <label for="sexo"> Escolha o seu gênero:</label>
+      <select name="sexo_cliente" id="sexo">
+      <option value="Nenhum selecionado"> Nenhum</option>
+      <option value="Masculino"> Masculino</option>
+      <option value="Feminino"> Feminino</option>
+      </select>
+  </div>
+    <div style="margin: 15px;" class="form-group">
+      <label for="estado_civil" style="margin-left: 30px;"> Escolha o seu estado civil:</label>
+      <select  id="estado_civil" >
+      <option value="Nenhum selecionado">Nenhum</option>
+      <option value="Solteiro(a)">Solteiro</option>
+      <option value="Casado(a)"> Casado</option>
+      <option value="Viúvo(a)"> Viúvo</option>
+    </select>
+
+      </div>
+        <!--caixa solteiro só quando a opção é "solteiro"-->
+    <div style="margin: 15px;" id="campoSolteiro" class="form-group">
+      <label for="tempo_solteiro">Há quanto tempo está solteiro(a)?</label>
+      <input type="date" id="tempo_solteiro" placeholder="Ex: 2 anos">
+    </div>
+        <!--caixa casado só quando a opção é "Casado"-->
+     <div style="margin: 15px;" id="campoCasado" class="form-group">
+      <label for="tempo_casado">Há quanto tempo está casado(a)?</label>
+      <input type="date" id="tempo_casado" placeholder="Ex: 2 anos">
+    </div>
+        <!--caixa viuvo só quando a opção é "Viúvo"-->
+    <div style="margin: 15px;" id="campoViuvo" class="form-group">
+      <label for="tempo_viuvo">Há quanto tempo está viúvo(a)?</label>
+      <input type="date" id="tempo_viuvo" placeholder="Ex: 2 anos">
+    </div>
+  
+    <br><br><br>
+  </form>
+</div>
+
+<!-- Botões principais -->
+<button id="limpar">Limpar Dados</button>
+<button id="guardar">Guardar</button>
+<button id="mostrar">Mostrar</button>
+
+<!-- Tabela onde os dados serão exibidos -->
+<h1>Tabela de dados</h1>
+<div style="max-height: 200px; overflow-y: auto;">
+  <table id="tabelaDados">
+    <thead>
+      <tr>
+        <th>Ações</th><th>Nome</th><th>Email</th><th>Senha</th><th>Sexo</th>
+        <th>Estado Civil</th><th>Tempo Solteiro</th><th>Tempo Casado</th><th>Tempo Viúvo</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+</center>
+
+<!-- JAVASCRIPT -->
+<script>
+  // Referências aos elementos do DOM
+  const estadoCivil = document.getElementById("estado_civil");
+  const campoSolteiro = document.getElementById("campoSolteiro");
+  const campoCasado = document.getElementById("campoCasado");
+  const campoViuvo = document.getElementById("campoViuvo");
+  const tempoSolteiro = document.getElementById("tempo_solteiro");
+  const tempoCasado = document.getElementById("tempo_casado");
+  const tempoViuvo = document.getElementById("tempo_viuvo");
+
+  // Mostra ou esconde campos com base no estado civil selecionado
+  estadoCivil.addEventListener("change", () => {
+    campoSolteiro.style.display = estadoCivil.value === "Solteiro(a)" ? "block" : "none";
+    if (estadoCivil.value !== "Solteiro(a)") tempoSolteiro.value = "";
+
+    campoCasado.style.display = estadoCivil.value === "Casado(a)" ? "block" : "none";
+    if (estadoCivil.value !== "Casado(a)") tempoCasado.value = "";
+
+    campoViuvo.style.display = estadoCivil.value === "Viúvo(a)" ? "block" : "none";
+    if (estadoCivil.value !== "Viúvo(a)") tempoViuvo.value = "";
+  });
+
+  // Array que guarda os dados inseridos
+  const dadosGuardados = [];
+  const form = document.getElementById("meuFormulario");
+
+  // Função para calcular o tempo passado desde uma data até hoje
+ function calcularTempoPassado(dataString) {
+  if (!dataString) return "";
+
+  const inicio = moment(dataString);
+  const agora = moment();
+
+  if (!inicio.isValid()) return "Data inválida";
+  if (inicio.isAfter(agora)) return "Data futura";
+
+  const duracao = moment.duration(agora.diff(inicio));
+  const totalDias = duracao.asDays();
+  const anos = Math.floor(totalDias / 365.25);
+  const meses = Math.floor((totalDias % 365.25) / 30.44);
+  const dias = Math.floor(totalDias % 30.44);
+
+  if (totalDias < 31) {
+    return `${Math.floor(totalDias)} dia(s)`;
+  } else if (totalDias < 365) {
+    return `${meses} mês(es)${dias > 0 ? ` e ${dias} dia(s)` : ""}`;
+  } else {
+    return `${anos} ano(s)` +
+           (meses > 0 ? ` e ${meses} mês(es)` : "") +
+           (dias > 0 ? ` e ${dias} dia(s)` : "");
+  }
+}
+
+  // Evento para guardar os dados
+  document.getElementById("guardar").addEventListener("click", () => {
+    // Valida os campos obrigatórios
+    if (!form.checkValidity()) {
+      alert("Preencha todos os campos obrigatórios.");
+      return;
+    }
+
+    // Criação do objeto com os dados preenchidos
+   const d = {
+    nome: document.getElementById("nome").value,
+    email: document.getElementById("email").value,
+    senha: document.getElementById("senha").value,
+    sexo: document.getElementById("sexo").value,
+    estado: estadoCivil.value,
+    tempo: tempoSolteiro.value,   // Armazena a data como string
+    tempo_2: tempoCasado.value,
+    tempo_3: tempoViuvo.value
+};
+
+    dadosGuardados.push(d); // Adiciona ao array
+    form.reset(); // Limpa o formulário
+    campoSolteiro.style.display = campoCasado.style.display = campoViuvo.style.display = "none";
+    alert("Dados guardados!");
+  });
+
+  // Função para atualizar a tabela com os dados guardados
+  function atualizarTabela() {
+  const tabela = document.getElementById("tabelaDados").querySelector("tbody");
+  tabela.innerHTML = ""; // Limpa a tabela
+
+  dadosGuardados.forEach((item, index) => {
+    const linha = document.createElement("tr");
+
+    linha.innerHTML = `
+      <td>
+        <button class="botoes-tabela" onclick="editarLinha(this, ${index})">Editar</button>
+        <button class="botoes-tabela"  onclick="eliminarLinha(${index})">Eliminar</button>
+      </td>
+      <td>${item.nome}</td>
+      <td>${item.email}</td>
+      <td>${item.senha}</td>
+      <td>${item.sexo}</td>
+      <td>${item.estado}</td>
+      <td>${calcularTempoPassado(item.tempo)}</td>
+      <td>${calcularTempoPassado(item.tempo_2)}</td>
+      <td>${calcularTempoPassado(item.tempo_3)}</td>
+    `;
+
+    tabela.appendChild(linha);
+  });
+}
+  // Mostra os dados na tabela
+  document.getElementById("mostrar").addEventListener("click", atualizarTabela);
+
+  // Limpa os dados e a tabela
+  document.getElementById("limpar").addEventListener("click", () => {
+    dadosGuardados.length = 0;
+    atualizarTabela();
+  });
+
+  // Remove uma linha da tabela e do array
+  function eliminarLinha(idx) {
+    dadosGuardados.splice(idx, 1);
+    atualizarTabela();
+  }
+
+  // Permite editar uma linha da tabela
+  function editarLinha(idx, btn) {
+    const tr = btn.closest("tr");
+    const item = dadosGuardados[idx];
+    const cols = tr.children;
+  }
+
+  // Guarda as alterações feitas na edição
+  function salvarEdicao(idx) {
+    const tb = document.getElementById("tabelaDados").querySelector("tbody");
+    const tr = tb.children[idx];
+    const inputs = tr.querySelectorAll("input");
+    const item = dadosGuardados[idx];
+    [item.nome, item.email, item.senha, item.sexo] = Array.from(inputs).slice(0, 4).map(i => i.value);
+    atualizarTabela();
+  }
+function editarLinha(botao, index) {
+  const linha = botao.closest("tr");
+  const item = dadosGuardados[index];
+
+  linha.innerHTML = `
+    <td>
+      <button class="botoes-tabela"  onclick="atualizarLinha(this, ${index})">Atualizar</button>
+    </td>
+    <td><input type="text" value="${item.nome}"></td>
+    <td><input type="email" value="${item.email}"></td>
+    <td><input type="text" value="${item.senha}"></td>
+    <td>
+      <select>
+        <option value="Masculino" ${item.sexo === "Masculino" ? "selected" : ""}>Masculino</option>
+        <option value="Feminino" ${item.sexo === "Feminino" ? "selected" : ""}>Feminino</option>
+      </select>
+    </td>
+    <td>
+      <select>
+        <option value="Solteiro(a)" ${item.estado === "Solteiro(a)" ? "selected" : ""}>Solteiro(a)</option>
+        <option value="Casado(a)" ${item.estado === "Casado(a)" ? "selected" : ""}>Casado(a)</option>
+        <option value="Viúvo(a)" ${item.estado === "Viúvo(a)" ? "selected" : ""}>Viúvo(a)</option>
+      </select>
+    </td>
+    <td><input type="date" value="${item.tempo || ""}"></td>
+    <td><input type="date" value="${item.tempo_2 || ""}"></td>
+    <td><input type="date" value="${item.tempo_3 || ""}"></td>
+  `;
+}
+
+function atualizarLinha(botao, index) {
+  const linha = botao.closest("tr");
+  const inputs = linha.querySelectorAll("input, select");
+
+  const novoItem = {
+    nome: inputs[0].value,
+    email: inputs[1].value,
+    senha: inputs[2].value,
+    sexo: inputs[3].value,
+    estado: inputs[4].value,
+    tempo: inputs[5].value,
+    tempo_2: inputs[6].value,
+    tempo_3: inputs[7].value
+  };
+
+  // Atualiza os dados no array original
+  dadosGuardados[index] = novoItem;
+
+  // Re-renderiza a tabela
+  atualizarTabela();
+}
+  
+</script>
+</body>
+</html>

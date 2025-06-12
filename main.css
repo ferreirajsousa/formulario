@@ -1,0 +1,106 @@
+
+input {
+  border-radius: 5px;
+}
+button{
+    border: 20px;
+    padding: 20px;
+    padding-left: 10px;
+    background: #c8b3a3;
+    text-align: center;
+    cursor: pointer;
+
+}
+.caixa{
+    width: 90%;
+    height: auto;
+    margin-top: 40px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+.form-horizontal {
+  width: 1100px;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between; /* Distribui os grupos ao longo da linha */
+  box-sizing: border-box;
+  padding: 10px;
+  margin-left: 4px;
+  margin: 50px;
+}
+.form-group {
+  width: 500px;
+    height: 50px;
+    background: #c9a185;
+    margin: 4px;
+    float: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    font-size: 14pt;
+    font-family: "Futura"; 
+    border-color: #AAFCB8;
+    cursor: pointer;
+    outline: none;
+}
+/* Ajusta inputs e selects */
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: red;
+}
+  label {
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+.botoes{
+  justify-content: flex-end;
+  text-align: center;
+  margin-top: 20px;
+}
+#tabelaDados th, #tabelaDados td {
+  padding: 12px 50px; /* 12px em cima/baixo, 50px nas laterais */
+}
+
+#tabelaDados th:nth-child(9), 
+#tabelaDados th:nth-child(2),
+#tabelaDados th:nth-child(3),
+#tabelaDados th:nth-child(4), 
+#tabelaDados th:nth-child(5),
+#tabelaDados th:nth-child(6),
+#tabelaDados th:nth-child(7),
+#tabelaDados th:nth-child(8){
+  background-color: #cfa485; 
+}
+legend{
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size:x-large ;
+  margin: 15px;
+}
+table{
+  text-align: center;
+  border-collapse: collapse;
+   width: 100%; 
+   margin-top: 20px; 
+} 
+    th, td { 
+    border: 1px solid #ccc;
+     padding: 5px; }
+.botoes-tabela{
+    border: 20px;
+    padding: 20px;
+    padding-left: 10px;
+    background: #f9f9f9;
+    text-align: center;
+    cursor: pointer;
+
+}
